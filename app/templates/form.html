@@ -1,0 +1,51 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script src="{{ url_for('static', filename='validate.js') }}"></script>
+    <style>
+        input, label, span, button { display: block; }
+        label.error { color: red; }
+        span.suggestion { color: green; }
+    </style>
+</head>
+
+<body>
+    <form>
+        <input type="email" name="email" placeholder="email"/>
+        <label for="email"></label>
+        <button type="submit">submit</button>
+    </form>
+
+    <script>
+        $('form input[name=email]').email_validator({
+            api_url: '/address/validate',
+            in_progress: function() {
+                $('label[for=email]')
+                    .removeClass('error')
+                    .removeClass('suggestion')
+                    .html('validating...');
+            },
+            success: function(data) {
+                console.log('success', data);
+                if (data.is_valid === false) {
+                    $('label[for=email]')
+                        .addClass('error')
+                        .text('invalid email address');
+                } else {
+                    $('label[for=email]').append(' ok');
+                }
+                if (data.did_you_mean) {
+                    var suggestion = $('<span class="suggestion"></span>');
+                    suggestion.html('did you mean <em>'+data.did_you_mean+'</em>?');
+                    $('label[for=email]').append(suggestion);
+                } 
+            },
+            error: function(err) {
+                $('label[for=email]')
+                    .addClass('error')
+                    .text(err);
+            }
+    });
+    </script>
+</body>
+</html>
