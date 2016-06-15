@@ -1,5 +1,6 @@
 import flanker.addresslib
 import urlparse
+import dnsq
 
 
 class MxCache(object):
@@ -17,7 +18,12 @@ class MxCache(object):
             cache = {}
 
         self._cache = cache
+        # cache mail server responses
         flanker.addresslib.set_mx_cache(self._cache)
+
+        # set custom DNS timeout
+        dnsq.DNS_LIFETIME_TIMEOUT_SECONDS = app.config.get('DNS_TIMEOUT')
+
         app.mxcache = self
 
     def redis_conn(self):
