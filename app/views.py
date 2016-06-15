@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, current_app, request, jsonify, make_response
 from decorator import crossdomain
 
 import flanker.addresslib.address
@@ -14,7 +14,8 @@ def validate_address():
     if not arg_address:
         return make_response(jsonify({'error': 'address parameter required'}), 400)
 
-    validated = flanker.addresslib.address.validate_address(arg_address)
+    validated, metrics = flanker.addresslib.address.validate_address(arg_address, metrics=True)
+    current_app.metrics.update(metrics)
     if validated is None:
         response = {'is_valid': False}
     else:
