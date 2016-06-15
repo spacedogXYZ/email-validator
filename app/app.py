@@ -1,12 +1,12 @@
 from flask import Flask, make_response, render_template
 from views import address
-from cache import config_cache
+from mxcache import MxCache
 from metrics import Metrics
 
 app = Flask(__name__)
 app.config.from_object('app.config')
 app.register_blueprint(address)
-app.cache = config_cache(app)
+mxcache = MxCache(app)
 metrics = Metrics(app)
 
 
