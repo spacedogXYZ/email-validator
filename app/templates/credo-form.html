@@ -1,0 +1,321 @@
+
+<!doctype html>
+<!--[if lt IE 7 ]> <html class="ie ie6 no-js" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie ie7 no-js" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="ie ie8 no-js" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="ie ie9 no-js" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+
+
+<meta charset="utf-8">
+<title>test | CREDO Action</title>
+<link rel="shortcut icon" type="image/x-icon" href="//s3.amazonaws.com/s3.credoaction.com/templates/credo_ak_1.0-aws/assets/favicon.ico" />
+<link rel="apple-touch-icon-precomposed" href="//s3.amazonaws.com/s3.credoaction.com/templates/credo_ak_1.0-aws/assets/apple-touch-icon-precomposed.png" />
+<link rel="image_src" href=""/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<meta property="og:site_name" content="CREDO Action" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://act.credoaction.com/sign/thisisatestjustatest" />
+<meta property="article:publisher" content="https://www.facebook.com/CREDO" />
+
+
+    <meta property="og:title" content="Sign the petition: X"/>
+
+
+    <meta property="og:description" content="I just took action to... I think you should too."/>
+
+
+<!-- shareprogress meta tags -->
+<meta name="sp:email_subject" content="I just signed this petition -- will you?" />
+<meta name="sp:email_body" content="I just took action to... I think you should too: http://act.credoaction.com/sign/thisisatestjustatest" />
+<meta name="sp:twitter" content="Sign the petition: Tell TARGET to ACTION http://bit.ly/1oWKCVy via @CREDOMobile #p2" />
+
+<link rel="stylesheet" type="text/css" href="//d2omw6a1nm6pnh.cloudfront.net/templates/credo_ak_1.0-aws/style.min.css.gzip" />
+<!--[if lte IE 8 ]>
+<link rel="stylesheet" type="text/css" href="//d2omw6a1nm6pnh.cloudfront.net/templates/credo_ak_1.0-aws/lteie8.css" />
+<![endif]-->
+
+<script>startTime=new Date()</script>
+  
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="//act.credoaction.com/resources/actionkit.js"></script>
+
+<script type="text/javascript" src="//d2omw6a1nm6pnh.cloudfront.net/templates/credo_ak_1.0-aws/credo.min.js.gzip"></script>
+
+<script type="text/javascript" src="/static/validate.js"></script>
+<script type="text/javascript">
+hide_mobile_bar();
+$(window).bind('load resize', function() {
+    petition_layout_resize();
+});
+
+function actionkitFormReady() {
+    petition_layout_init();
+     //added for email validation
+    actionkit_email_validate_init('form.ak-form',
+                                  '/address/validate'
+    );
+}
+</script>
+
+
+
+
+
+<script src="//c.shpg.org/4/sp.js"></script>
+<style type="text/css">
+p { font: 13px/21px arial,sans-serif; }
+.titleA { line-height: 1.2em; }
+#ak-confirmation { display: none; } 
+.events-suite .event_search_results_html .event>div { font-size: 13px; line-height: 21px; }
+#survey-questions label p { font-size: 13px; line-height: 21px; }
+#survey-questions label { font-size: 13px; line-height: 21px; }
+.checkbox-item { font-size: 13px; line-height: 21px; }
+</style>
+</head>
+<body class="petition-page lang-en  ak-no-js akid-unassigned">
+
+<!-- do not load GTM on event pages because it breaks some functions that rely on the submit button -->
+
+
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-TW7SNW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TW7SNW');</script>
+<!-- End Google Tag Manager -->
+
+
+
+<script type="text/javascript">actionkit.forms.initPage()</script>
+
+<div class="header">
+<div class="header-box">
+<h1 class="credo-logo"><a href="//www.credoaction.com">Credo Action</a></h1>
+</div> <!-- .header-box -->
+</div> <!-- .header -->
+
+<div class="content">
+<div class="content-box">
+
+
+    
+
+<h2 class="titleA">test</h2>
+
+<div class="col1">
+
+
+
+
+
+<div id="progress" class="progress-box"></div>
+
+<script type="text/ak-template" for="progress">
+[%
+with (progress) {
+    if ( goal_type && total ) {
+		progress.current = goal_type == 'dollars' ? total.dollars : total.actions;
+		progress.current += 0;
+	    if ( 0 ) {
+	    	goal = 0;
+	    } else {
+			if (progress.current < 450)
+			   goal = 500;
+			else if (progress.current < 900)
+			   goal = 1000;
+			else if (progress.current < 2400)
+			   goal = 2500;
+			else if (progress.current < 4500)
+			   goal = 5000;
+			else if (progress.current < 9500)
+			   goal = 10000;
+			else if (progress.current < 13000)
+			   goal = 15000;
+			else if (progress.current < 22000)
+			   goal = 25000;
+			else if (progress.current < 45000)
+			   goal = 50000;
+			else if (progress.current < 70000)
+			   goal = 75000;
+			else if (progress.current < 90000)
+			   goal = 100000;
+			else if (progress.current < 140000)
+			   goal = 150000;
+			else if (progress.current < 190000)
+			   goal = 200000;
+			else if (progress.current < 240000)
+			   goal = 250000;
+			else if (progress.current < 290000)
+			   goal = 300000;
+			else if (progress.current < 340000)
+			   goal = 350000;
+			else if (progress.current < 390000)
+			   goal = 400000;
+			else if (progress.current < 490000)
+			   goal = 500000;
+			else goal = 750000;
+	    };
+%]
+
+[% if (goal_type == "dollars") { %]
+<div id="therm" class="therm-dollars">
+<div class="therm-box">
+<div class="therm-bar"><div class="therm-fill" style="width:[%= progress.current > goal ? 100 : parseInt((total.dollars/goal)*100) %]%"></div></div>
+</div> <!-- .therm-box -->
+<div class="therm-text-box">
+<div class="big-percent">$[%= add_commas(total.dollars) %]</div>
+<div class="therm-text">We've raised <span class="dollars-raised">$[%= add_commas(progress.current) %]</span>&mdash;[%= parseInt((progress.current/goal)*100) %]% of our goal of <span class="dollars-total">$[%= add_commas(goal) %]</span>!</div>
+</div> <!-- .therm-text-box -->
+</div> <!-- #therm -->
+[% } else { %]
+<div id="therm" class="therm-signers">
+<div class="therm-box">
+<div class="therm-bar"><div class="therm-fill" style="width:[%= progress.current > goal ? 100 : parseInt((progress.current/goal)*100) %]%"></div></div>
+</div> <!-- .therm-box -->
+<div class="therm-text-box">
+<div class="big-percent">[%= parseInt((progress.current/goal)*100) %]%</div>
+<div class="therm-text">We've reached [%= add_commas(progress.current) %] of our goal of [%= add_commas(goal) %].</div>
+</div> <!-- .therm-text-box -->
+</div> <!-- #therm -->
+[% } %]
+[% } } %]
+</script>
+
+<input type="hidden" name="want_progress" value="1" />
+
+
+
+
+<form class="ak-form" name="act-petition" method="POST" action="https://act.credoaction.com/act/" accept-charset="utf-8">
+<input type="hidden" name="want_progress" value="1" />
+<input type="hidden" name="page" value="thisisatestjustatest">
+
+<div id="petition-box" class="form-box" >
+
+<h3 class="titleB">
+
+	Sign the petition
+	
+</h3>
+
+<div class="form-prompt-box banding">
+<div class="statement-leadin"><p>Statement lead-in:</p></div>
+<div class="statement-text"><p>"Petition text"</p></div>
+</div> <!-- .form-prompt-box -->
+
+<ul class="compact" id="ak-errors"></ul>
+
+<div id="unknown_user" class="ak-labels-overlaid ak-errs-below form-user-box banding">
+
+
+
+
+
+
+
+<div class="required form-item placeholder" id="id_name_box">
+<label for="id_name">Name<span class="ak-required-flag">*</span></label>
+
+<input name="name" id="id_name" type="text" />
+
+</div>
+
+<div class="required form-item placeholder" id="id_email_box">
+<label for="id_email">Email<span class="ak-required-flag">*</span></label>
+
+<input name="email" id="id_email" type="text" />
+
+</div>
+
+<div class="required form-item placeholder" id="id_zip_box">
+<label for="id_zip">Zipcode<span class="ak-required-flag">*</span></label>
+
+<input name="zip" id="id_zip" type="text" />
+
+</div>
+
+
+
+<input type="hidden" name="country" value="United States">
+
+
+</div>
+
+
+
+<div class="form-submit-box banding">
+<div class="form-item">
+<button type="submit" id="submitButton">Sign Petition</button>
+</div> <!-- .form-item -->
+<div id="known_user"><a href="?" onclick="return actionkit.forms.logOut()">Not <span id="known_user_name"></span>?</a></div>
+<p class="notice">You'll receive periodic updates on offers and activism opportunities.</p>
+</div> <!-- .form-submit-box -->
+
+</div> <!-- .form-box -->
+
+</form>
+
+</div><!-- .col1 -->
+
+<div class="col2 about-text story">
+
+<p>Email Validation Test form</p> 
+</div><!-- .col2 -->
+
+
+
+
+
+<script type="text/javascript">
+
+actionkit.forms.contextRoot = '/context/';
+
+actionkit.forms.initForm('act-petition');
+var ua = $('<input type="hidden" name="action_user_agent" />').val(navigator.userAgent);
+$('.ak-form').append(ua);
+
+</script>
+
+
+
+</div> <!-- .content-box -->
+</div> <!-- .content -->
+
+<div class="footer">
+<div class="footer-box">
+<ul class="nav">
+<li><a href="//www.credoaction.com" class="banding">home</a></li>
+<li><a href="//www.credomobile.com/misc/TermsOfUse.aspx" class="banding">terms of use</a></li>
+<li><a href="//www.credomobile.com/Misc/Privacy.aspx" class="banding">privacy</a></li>
+<li><a href="//www.credoaction.com/contact" class="banding">contact</a></li>
+</ul>
+<p class="publication banding">CREDO Action is a publication of Working Assets <span>|</span> <a href="//www.credomobile.com">credomobile.com</a></p>
+</div> <!-- .footer-box -->
+</div> <!-- .footer -->
+
+<script type="text/javascript" src="//www.credomobile.com/lp/sc/Cookie/CookieSet_Action.js"></script>
+<script> passVal(); </script>
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '1598698800390548');
+fbq('track', "PageView");</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1598698800390548&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+</body>
+</html>

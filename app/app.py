@@ -20,6 +20,11 @@ def test_form():
     return render_template('form.html')
 
 
+@app.route('/test-credo')
+def test_credo():
+    return render_template('credo-form.html')
+
+
 @app.route('/metrics')
 def graph_metrics():
     data = metrics.get()

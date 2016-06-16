@@ -6,6 +6,7 @@
         input, label, span, button { display: block; }
         label.error { color: red; }
         span.suggestion { color: green; }
+        span.suggestion a { text-decoration: underline; cursor: pointer; }
     </style>
 </head>
 
@@ -36,8 +37,11 @@
                 }
                 if (data.did_you_mean) {
                     var suggestion = $('<span class="suggestion"></span>');
-                    suggestion.html('did you mean <em>'+data.did_you_mean+'</em>?');
+                    suggestion.html('did you mean <a>'+data.did_you_mean+'</a>?');
                     $('label[for=email]').append(suggestion);
+                    $('.suggestion a').click(function() {
+                        $('form input[name=email]').val(this.text);
+                    });
                 } 
             },
             error: function(err) {
