@@ -16,6 +16,7 @@ def validate_address():
 
     validated, metrics = flanker.addresslib.address.validate_address(arg_address, metrics=True)
     current_app.metrics.update(metrics)
+
     if validated is None:
         response = {'is_valid': False}
     else:
@@ -28,6 +29,6 @@ def validate_address():
             'address': validated.address
         }
         suggested_hostname = flanker.addresslib.corrector.suggest(validated.hostname)
-        if suggested_hostname is not validated.hostname:
+        if suggested_hostname != validated.hostname:
             response['did_you_mean'] = '%s@%s' % (validated.mailbox, suggested_hostname)
     return make_response(jsonify(response), 200)
