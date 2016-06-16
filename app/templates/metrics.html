@@ -1,0 +1,56 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.0/d3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" charset="utf-8"></script>
+    
+    <link rel="stylesheet" type="text/css" href="/static/metrics-graphics-2.9.0/metricsgraphics.css" />
+    <style>
+        #graph {
+            width: 600;
+            height: 200;
+        }
+        #loading {
+            margin: 25% 50%;
+        }
+    </style>
+
+
+    <script src="/static/metrics-graphics-2.9.0/metricsgraphics.js" charset="utf-8"></script>
+    <script>
+        loadGraph = function() {
+            d3.json('data/metrics.json?seconds=3600', function(metrics) {
+            var legend = _.keys(metrics);
+            var data = _.map(metrics, function(m) {
+                return _.map(m, function(d) {
+                    // convert time:data values from our metrics.json to metricsgraphics date:value
+                    return {'date':new Date(d.time*1000), 'value':parseFloat(d.data)};
+                });
+            });
+
+            console.log(data);
+            MG.data_graphic({
+                title: "Email Validation Timing",
+                data: data,
+                width: 600,
+                height: 200,
+                right: 40,
+                missing_is_hidden: true,
+                target: '#graph',
+                legend: legend,
+                legend_target: '#legend'
+            });
+           $('#graph #loading').remove();
+        });
+    };
+    $(document).ready(function() {
+        loadGraph();
+    });
+    </script>
+</head>
+
+<body>
+    <div id="graph"><div id="loading"><img src="/static/spinner.gif"></div></div>
+    <div id="legend"></div>
+</body>
+</html>
