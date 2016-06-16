@@ -1,5 +1,5 @@
 import flanker.addresslib
-import urlparse
+import redis
 import dnsq
 
 
@@ -11,13 +11,14 @@ class MxCache(object):
 
     def init_app(self, app):
         if 'REDIS_URL' in app.config:
-            redis_url = urlparse.urlsplit(app.config.get('REDIS_URL'))
-            cache = flanker.addresslib.drivers.redis_driver.RedisCache(
-                host=redis_url.hostname, port=redis_url.port)
+            cache = flanker.addresslib.drivers.redis_driver.RedisCache()
+            cache.r = redis.StrictRedis.from_url(app.config.get('REDIS_URL'))
+            print cache
         else:
             cache = {}
 
         self._cache = cache
+
         # cache mail server responses
         flanker.addresslib.set_mx_cache(self._cache)
 
