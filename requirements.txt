@@ -21,7 +21,7 @@ itsdangerous==0.24
 pyasn1==0.1.9
 pycparser==2.14
 redis==2.10.5
--e git+ssh://github.com/jlev/redis-timeseries-py.git@77364cf5584d2371c767e4f68a2e8dc18007c3f1#egg=redis_timeseries-master
+-e git+https://github.com/jlev/redis-timeseries-py.git@77364cf5584d2371c767e4f68a2e8dc18007c3f1#egg=redis_timeseries-master
 regex==2016.05.23
 six==1.10.0
 wsgiref==0.1.2
