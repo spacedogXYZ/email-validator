@@ -19,7 +19,7 @@
     <script src="/static/metrics-graphics-2.9.0/metricsgraphics.js" charset="utf-8"></script>
     <script>
         loadGraph = function() {
-            d3.json('data/metrics.json?seconds=3600', function(metrics) {
+            d3.json('data/metrics.json?seconds=600', function(metrics) {
             var legend = _.keys(metrics);
             var data = _.map(metrics, function(m) {
                 return _.map(m, function(d) {
@@ -28,9 +28,9 @@
                 });
             });
 
-            console.log(data);
             MG.data_graphic({
                 title: "Email Validation Timing",
+                description: "Last five minutes of live data",
                 data: data,
                 width: 600,
                 height: 200,
