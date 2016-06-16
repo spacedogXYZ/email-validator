@@ -12,7 +12,6 @@
 //        error: validation_error,           // called when an error reaching the validator has occured
 //    });
 //
-//
 // Sample JSON in success callback:
 //
 //  {
@@ -25,6 +24,8 @@
 //      "did_you_mean": null
 //  }
 //
+// To integrate with ActionKit field validation and error display:
+//    actionkit_email_validate_init($form, api_url);
 //
 
 (function( $ ) {
@@ -39,7 +40,6 @@
 
                 //Attach event to options
                 options.e = e;
-
                 run_validator(elementValue, options, thisElement);
             });
         });
@@ -116,7 +116,7 @@
         // make ajax call to get validation results
         element.validationRequest = $.ajax({
             type: "GET",
-            url: options.api_url || 'https://emailvalidator.herokuapp.com/address/validate' ,
+            url: options.api_url || 'https://email-address-validator.herokuapp.com/address/validate' ,
             data: { address: address_text, api_key: options.api_key },
             dataType: "json",
             crossDomain: true,
@@ -142,3 +142,33 @@
         });
     }
 })( jQuery );
+
+// ActionKit-specific form validation
+function actionkit_email_validate_init(form, api_url) {
+    if (!form) { form = $('form.ak-form'); }
+    if (!api_url) { api_url = 'https://email-address-validator.herokuapp.com/address/validate'; }
+
+    $('input[name=email]', form).email_validator({
+        api_url: api_url,
+        in_progress: function() {
+            $('input[name=email]', form).removeClass('ak-error');
+            actionkit.forms.clearErrors();
+        },
+        success: function(data) {
+            if (data.is_valid === false) {
+                actionkit.forms.onValidationErrors({"email:invalid": "Email is invalid"}, "email");
+            }
+            if (data.did_you_mean) {
+                actionkit.forms.onValidationErrors({"email:did_you_mean": "<span class='email_suggestion'>"+
+                                                   "Did you mean <a>"+data.did_you_mean+"</a>?</span>"}, "email")
+                $('.email_suggestion a')
+                    .css({'cursor':'pointer'})
+                    .css({'text-decoration':'underline'})
+                    .click(function() {
+                        $('input[name=email]', form).val(this.text).removeClass('ak-error');
+                        $('.email_suggestion').remove();
+                });
+            }
+        }
+    });
+};
