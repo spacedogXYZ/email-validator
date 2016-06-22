@@ -1,5 +1,6 @@
 import flanker.addresslib
 import redis
+import collections
 import dnsq
 
 
@@ -13,9 +14,8 @@ class MxCache(object):
         if 'REDIS_URL' in app.config:
             cache = flanker.addresslib.drivers.redis_driver.RedisCache()
             cache.r = redis.StrictRedis.from_url(app.config.get('REDIS_URL'))
-            print cache
         else:
-            cache = {}
+            cache = collections.defaultdict(dict)
 
         self._cache = cache
 
@@ -28,4 +28,7 @@ class MxCache(object):
         app.mxcache = self
 
     def redis_conn(self):
-        return self._cache.r
+        if hasattr(self._cache, 'r'):
+            return self._cache.r
+        else:
+            return self._cache
