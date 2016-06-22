@@ -10,11 +10,11 @@ run on your own server, for privacy and performance
 ## Form Integration
 - include `/static/validate.js`
 - attach to your email input `$('form input[name=email]').email_validator` and define your own success and error callbacks
-- or use ActionKit.forms validation with `actionkit_email_validate_init(<'form.ak-form'>, <API_URL>);`
+- or use ActionKit.forms validation with `actionkit_email_validate_init('form.ak-form', API_URL);`
 
 ## Deployment
 - caches mail server responses in Redis, or thread-local dictionary
-- warm mail server cache with `python manager.py warm_cache -f REMOTE_FILE` or `python manager.py warm_cache -f - < LOCAL_FILE`
+- warm cache with `python manager.py warm_cache -f REMOTE_FILE` or `python manager.py warm_cache -f - < LOCAL_FILE`
 
 ## Development
 - create python virtual environment `virtualenv .venv`    
