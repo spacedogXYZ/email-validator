@@ -18,7 +18,11 @@ class Metrics(object):
     def update(self, metrics):
         for f in MX_FIELDS:
             m = getattr(self, f)
-            m.add(str(metrics[f]))
+            try:
+                m.add(str(metrics[f]))
+            except AttributeError:
+                # default cache does not allow append
+                pass
 
     def get(self, seconds=60*5):
         timeseries = {}
@@ -27,5 +31,8 @@ class Metrics(object):
             timeseries[f] = []
             m = getattr(self, f)
             for r in m.fetch_range(now - seconds, now):
-                timeseries[f].append({'time': r["time"], 'data': r["data"]})
+                try:
+                    timeseries[f].append({'time': r["time"], 'data': r["data"]})
+                except AttributeError:
+                    pass
         return timeseries

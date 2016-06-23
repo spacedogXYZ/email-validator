@@ -15,7 +15,7 @@ class MxCache(object):
             cache = flanker.addresslib.drivers.redis_driver.RedisCache()
             cache.r = redis.StrictRedis.from_url(app.config.get('REDIS_URL'))
         else:
-            cache = collections.defaultdict(dict)
+            cache = collections.defaultdict(str)
 
         self._cache = cache
 
