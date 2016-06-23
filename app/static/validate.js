@@ -148,14 +148,6 @@ function actionkit_email_validate_init(form, api_url) {
     if (!form) { form = $('form.ak-form'); }
     if (!api_url) { api_url = 'https://email-address-validator.herokuapp.com/address/validate'; }
 
-    // email_suggestion click handler
-     // attach to email_suggestion.a with onclick instead of jquery, actionkit keeps rewriting error list and doesn't provide callbacks
-    window.email_suggestion = function() {
-        $('input[name=email]', form).val($('.email_suggestion a').text()).removeClass('ak-error');
-        $('.email_suggestion').remove();
-        actionkit.forms.clearErrors();
-    }
-
     $('input[name=email]', form).email_validator({
         api_url: api_url,
         in_progress: function() {
@@ -167,9 +159,14 @@ function actionkit_email_validate_init(form, api_url) {
                 actionkit.forms.onValidationErrors({"email:invalid": "Email is invalid"}, "email");
             }
             if (data.did_you_mean) {
-                actionkit.forms.onValidationErrors({"email:did_you_mean": "<span class='email_suggestion' style='display:inline-block;'>"+
-                                                   "Did you mean <a style='cursor: pointer; text-decoration: underline;'"+
-                                                   " onclick='window.email_suggestion()'>"+data.did_you_mean+"</a>?</span>"}, "email");
+                actionkit.forms.onValidationErrors({"email:did_you_mean": "<span class='email_suggestion'>"+
+                                                   "Did you mean <a style='cursor: pointer; text-decoration: underline;'>"
+                                                   +data.did_you_mean+"</a>?</span>"}, "email");
+                $(form).on('click', '.email_suggestion a', function() {
+                    $('input[name=email]', form).val(this.text).removeClass('ak-error');
+                    $('.email_suggestion').remove();
+                    actionkit.forms.clearErrors();
+                });
             }
         }
     });
