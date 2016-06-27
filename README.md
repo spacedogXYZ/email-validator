@@ -10,7 +10,7 @@ run on your own server, for privacy and performance
 ## Form Integration
 - include `/static/validate.js`
 - attach to your email input `$('form input[name=email]').email_validator` and define your own success and error callbacks
-- or use ActionKit.forms validation with `actionkit_email_validate_init('form.ak-form', API_URL);`
+- or use ActionKit.forms validation with `actionkit.emailValidation.init(API_URL);`
 
 ## Deployment
 - caches mail server responses in Redis, or thread-local dictionary

@@ -25,7 +25,7 @@
 //  }
 //
 // To integrate with ActionKit field validation and error display:
-//    actionkit_email_validate_init($form, api_url);
+//    actionkit.emailValidation.init(api_url);
 //
 
 (function( $ ) {
@@ -144,30 +144,35 @@
 })( jQuery );
 
 // ActionKit-specific form validation
-function actionkit_email_validate_init(form, api_url) {
-    if (!form) { form = $('form.ak-form'); }
-    if (!api_url) { api_url = 'https://email-address-validator.herokuapp.com/address/validate'; }
+actionkit.emailValidation = {
+    init: function(api_url) {
+        if (!api_url) { api_url = 'https://email-address-validator.herokuapp.com/address/validate'; }
 
-    $('input[name=email]', form).email_validator({
-        api_url: api_url,
-        in_progress: function() {
-            $('input[name=email]', form).removeClass('ak-error');
-            actionkit.forms.clearErrors();
-        },
-        success: function(data) {
-            if (data.is_valid === false) {
-                actionkit.forms.onValidationErrors({"email:invalid": "Email is invalid"}, "email");
+        $('input[name=email]', actionkit.form).email_validator({
+            api_url: api_url,
+            in_progress: function() {
+                $('input[name=email]', actionkit.form).removeClass('ak-error');
+                actionkit.forms.clearErrors();
+            },
+            success: function(data) {
+                actionkit.emailValidation.data = data;
+                $('input[name=email]').trigger('focusout'); // force field to lose focus, so validation is triggered
+                if (data.is_valid === false) {
+                    actionkit.forms.onValidationErrors({"email:invalid": "Email is invalid"}, "email");
+                }
+                if (data.did_you_mean) {
+                    actionkit.forms.onValidationErrors({"email:did_you_mean": "<span class='email_suggestion'>"+
+                                                       "Did you mean <a style='cursor: pointer; text-decoration: underline;'"+
+                                                       "onclick=javascript:actionkit.emailValidation.suggestion(); return false;>"+
+                                                       data.did_you_mean+"</a>?</span>"}, "email");
+                }
+                
             }
-            if (data.did_you_mean) {
-                actionkit.forms.onValidationErrors({"email:did_you_mean": "<span class='email_suggestion'>"+
-                                                   "Did you mean <a style='cursor: pointer; text-decoration: underline;'>"
-                                                   +data.did_you_mean+"</a>?</span>"}, "email");
-                $(form).on('click', '.email_suggestion a', function() {
-                    $('input[name=email]', form).val(this.text).removeClass('ak-error');
-                    $('.email_suggestion').remove();
-                    actionkit.forms.clearErrors();
-                });
-            }
-        }
-    });
+        });
+    },
+    suggestion: function() {
+        $('input[name=email]', actionkit.form).val(this.data.did_you_mean).removeClass('ak-error');
+        $('.email_suggestion').remove();
+        actionkit.forms.clearErrors();
+    }
 };
