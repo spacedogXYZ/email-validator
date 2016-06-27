@@ -10,7 +10,10 @@ run on your own server, for privacy and performance
 ## Form Integration
 - include `/static/validate.js`
 - attach to your email input `$('form input[name=email]').email_validator` and define your own success and error callbacks
-- or use ActionKit.forms validation with `actionkit.emailValidation.init(API_URL);`
+- or use ActionKit.forms validation with ```actionkit.emailValidation.init({
+    api_url: 'https://YOUR_APP.herokuapp.com/address/validate',
+    stop_on_invalid: true
+});```
 
 ## Deployment
 - caches mail server responses in Redis, or thread-local dictionary

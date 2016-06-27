@@ -25,7 +25,10 @@
 //  }
 //
 // To integrate with ActionKit field validation and error display:
-//    actionkit.emailValidation.init(api_url);
+//    actionkit.emailValidation.init({
+//      api_url: 'https://email-address-validator.herokuapp.com/validate',
+//      stop_on_invalid: true
+//    });
 //
 
 (function( $ ) {
@@ -145,30 +148,43 @@
 
 // ActionKit-specific form validation
 actionkit.emailValidation = {
-    init: function(api_url) {
-        if (!api_url) { api_url = 'https://email-address-validator.herokuapp.com/address/validate'; }
-
+    init: function(options) {
+        var defaults = {
+            api_url : 'https://email-address-validator.herokuapp.com/address/validate',
+            stop_on_invalid: false
+        }
+        this.options = $.extend({}, defaults, options || {});
+ 
         $('input[name=email]', actionkit.form).email_validator({
-            api_url: api_url,
+            api_url: this.options.api_url,
             in_progress: function() {
                 $('input[name=email]', actionkit.form).removeClass('ak-error');
                 actionkit.forms.clearErrors();
             },
             success: function(data) {
                 actionkit.emailValidation.data = data;
-                $('input[name=email]').trigger('focusout'); // force field to lose focus, so validation is triggered
                 if (data.is_valid === false) {
                     actionkit.forms.onValidationErrors({"email:invalid": "Email is invalid"}, "email");
                 }
                 if (data.did_you_mean) {
                     actionkit.forms.onValidationErrors({"email:did_you_mean": "<span class='email_suggestion'>"+
                                                        "Did you mean <a style='cursor: pointer; text-decoration: underline;'"+
-                                                       "onclick=javascript:actionkit.emailValidation.suggestion(); return false;>"+
+                                                       "onmousedown=javascript:actionkit.emailValidation.suggestion(); return false;>"+
                                                        data.did_you_mean+"</a>?</span>"}, "email");
+                    // use onmousedown instead of onclick, so it has priority over other focusout validation
                 }
-                
             }
         });
+
+        if (this.options.stop_on_invalid) {
+            window.actionkitBeforeSubmit = function() {
+                if (actionkit.emailValidation.data &&
+                    actionkit.emailValidation.data.is_valid === false) {
+                        actionkit.forms.onValidationErrors({"email:invalid": "Email is invalid"}, "email");
+                        return false;
+                }
+            }
+        }
     },
     suggestion: function() {
         $('input[name=email]', actionkit.form).val(this.data.did_you_mean).removeClass('ak-error');
