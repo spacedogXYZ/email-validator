@@ -15,7 +15,7 @@ dnspython==1.13.0
 dnsq==1.1.6
 enum34==1.1.6
 expiringdict==1.1.3
-flanker==0.4.38
+-e git+https://github.com/spacedogXYZ/flanker.git#egg=flanker-fork
 gevent==1.1.1
 greenlet==0.4.10
 gunicorn==19.6.0

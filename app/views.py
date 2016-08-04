@@ -14,7 +14,7 @@ def validate_address():
     if not arg_address:
         return make_response(jsonify({'error': 'address parameter required'}), 400)
 
-    validated, metrics = flanker.addresslib.address.validate_address(arg_address, metrics=True)
+    validated, metrics = flanker.addresslib.address.validate_address(arg_address, metrics=True, mx_lookup=False)
     current_app.metrics.update(metrics)
 
     if validated is None:
