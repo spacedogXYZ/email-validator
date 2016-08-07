@@ -3,6 +3,7 @@ Flask==0.10.1
 Flask-Script==2.0.5
 Jinja2==2.8
 MarkupSafe==0.23
+MonthDelta==1.0b0
 WebOb==1.6.1
 Werkzeug==0.11.10
 blinker==1.4
@@ -22,11 +23,11 @@ gunicorn==19.6.0
 idna==2.1
 ipaddress==1.0.16
 itsdangerous==0.24
+kairos==0.10.1
 pyasn1==0.1.9
 pycparser==2.14
 raven==5.21.0
 redis==2.10.5
--e git+https://github.com/jlev/redis-timeseries-py.git@77364cf5584d2371c767e4f68a2e8dc18007c3f1#egg=redis_timeseries-master
 regex==2016.05.23
 six==1.10.0
 uwsgi

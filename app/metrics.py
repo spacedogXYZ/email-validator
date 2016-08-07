@@ -1,5 +1,7 @@
-from redistimeseries import RedisTimeSeries
+from kairos import Timeseries
+from collections import defaultdict
 import time
+
 
 MX_FIELDS = ['dns_lookup', 'mx_lookup', 'mx_conn', 'custom_grammar', 'parsing']
 
@@ -11,28 +13,27 @@ class Metrics(object):
             self.init_app(app)
 
     def init_app(self, app):
-        for f in MX_FIELDS:
-            setattr(self, f, RedisTimeSeries(f, 1, app.mxcache.redis_conn()))
+        self.t = Timeseries(app.mxcache.redis_conn(),
+           type='series', read_func=float, intervals={
+                'minute': {
+                    'step': 60,         # 60 seconds
+                    'steps': 12 * 60,   # last 12 hours
+                }
+            })
         app.metrics = self
 
     def update(self, metrics):
         for f in MX_FIELDS:
-            m = getattr(self, f)
             try:
-                m.add(str(metrics[f]))
+                self.t.insert(f, metrics[f])
             except AttributeError:
                 # default cache does not allow append
                 pass
 
-    def get(self, seconds=60*5):
-        timeseries = {}
+    def get_latest(self, minutes=5):
         now = float(time.time())
+        joined_data = {}
         for f in MX_FIELDS:
-            timeseries[f] = []
-            m = getattr(self, f)
-            for r in m.fetch_range(now - seconds, now):
-                try:
-                    timeseries[f].append({'time': r["time"], 'data': r["data"]})
-                except AttributeError:
-                    pass
-        return timeseries
+            series_data = self.t.series(f, 'minute', start=now - minutes * 60, end=now)
+            joined_data[f] = series_data
+        return joined_data
