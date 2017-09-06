@@ -1,0 +1,4 @@
+-r common.txt
+raven==5.21.0
+uwsgi
+wsgiref==0.1.2
