@@ -22,12 +22,12 @@
             d3.json('data/metrics.json?minutes=60', function(metrics) {
             var legend = _.keys(metrics);
             var data = _.map(metrics, function(series) {
-                return _.map(series, function(value, time) {
+                return _.filter(_.map(series, function(value, time) {
                     // convert time:value values from our metrics.json to metricsgraphics date:value
                     if (value[0]) {
                         return {'date':new Date(time*1000), 'value':parseFloat(value[0])};
                     }
-                });
+                }));
             });
 
             MG.data_graphic({
