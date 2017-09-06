@@ -2,6 +2,7 @@ from flask import Flask, make_response, render_template, jsonify, request
 from views import address
 from mxcache import MxCache
 from metrics import Metrics
+from flask_rq2 import RQ
 
 app = Flask(__name__)
 app.config.from_object('app.config')
@@ -9,6 +10,8 @@ app.register_blueprint(address)
 mxcache = MxCache(app)
 metrics = Metrics(app)
 
+rq = RQ(async=app.config.get('DEBUG', False))
+rq.init_app(app)
 
 @app.route('/')
 def index():

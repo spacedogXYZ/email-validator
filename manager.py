@@ -1,9 +1,11 @@
 from flask.ext.script import Manager
-from app import app
+from flask_rq2.script import RQManager
+from app.app import app, rq
 import flanker
 import sys
 
 manager = Manager(app)
+manager.add_command('rq', RQManager(rq))
 
 
 @manager.option('-f', '--filename', dest='filename', default=None)
