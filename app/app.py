@@ -30,8 +30,8 @@ def test_credo():
 
 @app.route('/data/metrics.json')
 def metrics_json():
-    seconds = request.values.get('seconds', 60*5)  # default to last 5 minutes of stats
-    data = metrics.get(seconds=int(seconds))
+    minutes = request.values.get('minutes', 60)  # default to last hour of stats
+    data = metrics.get_latest(minutes=int(minutes))
     return jsonify(data)
 
 
