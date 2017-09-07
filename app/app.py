@@ -1,17 +1,30 @@
 from flask import Flask, make_response, render_template, jsonify, request
-from views import address
 from mxcache import MxCache
 from metrics import Metrics
 from flask_rq2 import RQ
 
-app = Flask(__name__)
+import logging
+
+app = Flask('mailvalidate')
 app.config.from_object('app.config')
-app.register_blueprint(address)
+# setup logging before further config
+if app.config.get('DEBUG'):
+    loglevel = logging.DEBUG
+else:
+    loglevel = logging.ERROR
+logging.basicConfig(level=loglevel)
+
+
 mxcache = MxCache(app)
 metrics = Metrics(app)
 
-rq = RQ(async=app.config.get('DEBUG', False))
+DEBUG = app.config.get('DEBUG', False)
+rq = RQ(async=not DEBUG)
+rq.app_worker_path = 'app.worker_preload'
 rq.init_app(app)
+
+from views import address
+app.register_blueprint(address)
 
 @app.route('/')
 def index():
