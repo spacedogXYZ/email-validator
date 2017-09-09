@@ -51,8 +51,12 @@ class ActionKitCRM(BaseCRM):
         user = self.client.user.list(email=email)
         if user:
             log.info("update {} {}".format(email,data))
-            # tmp comment out
+            # TODO
             # return user[0].update(data)
             return True
         else:
             return False
+
+    def unsubscribe_user(self, email):
+        # TODO
+        return True

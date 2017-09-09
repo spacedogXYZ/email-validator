@@ -17,6 +17,12 @@ class BaseCRM(object):
         """
         raise NotImplementedError()
 
+    def set_user_status(self, email, data):
+        raise NotImplementedError() 
+
+    def unsubscribe_user(email):
+        raise NotImplementedError()
+
 import os
 
 def get_instance():
