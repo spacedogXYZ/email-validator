@@ -2,9 +2,11 @@ appnope==0.1.0
 asn1crypto==0.22.0
 backports.shutil-get-terminal-size==1.0.0
 cchardet==2.1.1
+certifi==2017.7.27.1
 cffi==1.10.0
 chardet==3.0.4
 click==6.7
+contextlib2==0.5.5
 croniter==0.3.19
 cryptography==2.0.3
 decorator==4.0.11
@@ -28,21 +30,23 @@ MonthDelta==1.0b0
 pathlib2==2.2.1
 pexpect==4.2.1
 pickleshare==0.7.4
-ply==3.11
+ply==3.10
 prompt-toolkit==1.0.13
 ptyprocess==0.5.1
 pycparser==2.18
 Pygments==2.2.0
+-e git+https://github.com/MoveOnOrg/python-actionkit.git@b7901ab9bf134ec2210242e14b6f92d52e2e0106#egg=python_actionkit
 python-dateutil==2.6.1
--e git+https://github.com/MoveOnOrg/python-actionkit.git#egg=python-actionkit
 redis==2.10.6
 regex==2017.7.28
+requests==2.18.4
 rq==0.6.0
 rq-scheduler==0.7.0
 scandir==1.4
 simplegeneric==0.8.1
 six==1.10.0
 traitlets==4.3.1
+urllib3==1.22
 wcwidth==0.1.7
 WebOb==1.7.3
 Werkzeug==0.12.2
