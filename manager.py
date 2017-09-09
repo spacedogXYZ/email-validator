@@ -3,10 +3,12 @@ import logging
 # suppress some of flankers verbose parser logs
 logging.getLogger("flanker.addresslib.parser").setLevel(logging.ERROR)
 
+from app.app import app, rq
+
 from flask.ext.script import Manager
 from flask_rq2.script import RQManager
 
-from app.app import app, rq
+
 from app import jobs
 
 manager = Manager(app)
