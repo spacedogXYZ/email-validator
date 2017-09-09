@@ -9,7 +9,7 @@ app = Flask('mailvalidate')
 app.config.from_object('app.config')
 # setup logging before further config
 if app.config.get('DEBUG'):
-    loglevel = logging.DEBUG
+    loglevel = logging.INFO
 else:
     loglevel = logging.ERROR
 logging.basicConfig(level=loglevel)
@@ -18,8 +18,8 @@ logging.basicConfig(level=loglevel)
 mxcache = MxCache(app)
 metrics = Metrics(app)
 
-DEBUG = app.config.get('DEBUG', False)
-rq = RQ(async=not DEBUG)
+RQ_ASYNC = app.config.get('RQ_ASYNC', False)
+rq = RQ(async=RQ_ASYNC)
 rq.app_worker_path = 'app.worker_preload'
 rq.init_app(app)
 
