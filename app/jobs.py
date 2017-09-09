@@ -1,4 +1,5 @@
 from .app import app, rq
+from rq import get_current_job
 from integrations import base_crm, briteverify
 import flanker.addresslib.address
 
@@ -15,9 +16,8 @@ def validate_new_emails():
     to_validate = crm_instance.new_emails()
 
     for email in to_validate:
-        simple_validation = flanker_validate.queue(email=email)
-        print "simple_validation", simple_validation.id
-        #stored_result = save_to_crm.queue(crm_instance, depends_on=simple_validation.id)
+        simple_validation_job = flanker_validate.queue(email=email)
+        save_result_job = save_to_crm.queue(depends_on=simple_validation_job)
 
     # send admin report
     # TODO
@@ -45,11 +45,12 @@ def flanker_validate(email):
     return data
 
 @rq.job
-def save_to_crm(crm_instance):
+def save_to_crm():
+    crm_instance = base_crm.get_instance()
+
     # get results of job dependency
-    validation_result_id = self.dependencies[0].id
-    validation_result = self.q.fetch_job(validation_result_id).result
-    print "validation_result", validation_result
+    job = get_current_job(rq.connection)
+    validation_result = job.dependency.result
 
     email = validation_result['email']
     status = validation_result['status']
