@@ -34,7 +34,7 @@ ptyprocess==0.5.1
 pycparser==2.18
 Pygments==2.2.0
 python-dateutil==2.6.1
--r git+https://github.com/MoveOnOrg/python-actionkit.git#egg=python-actionkit
+-e git+https://github.com/MoveOnOrg/python-actionkit.git#egg=python-actionkit
 redis==2.10.6
 regex==2017.7.28
 rq==0.6.0
