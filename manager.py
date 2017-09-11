@@ -16,15 +16,18 @@ manager.add_command('rq', RQManager(rq))
 def warm_cache(filename):
     import flanker
 
-    if(not(filename) or filename == '-'):
-        f = sys.stdin
-    else:
-        f = open(filename)
-    log.info("warm mx cache {}".format(f.name))
+    if filename:
+        if filename == '-':
+            f = sys.stdin
+        else:
+            f = open(filename)
+        log.info("flanker warmup mx cache {}".format(f.name))
 
-    for domain in f:
-        mx = flanker.addresslib.validate.mail_exchanger_lookup(domain, metrics=False)
-        log.info('{}, {}'.format(domain, mx))
+        for domain in f:
+            mx = flanker.addresslib.validate.mail_exchanger_lookup(domain, metrics=False)
+            log.info('{}, {}'.format(domain, mx))
+    else:
+        log.info("flanker warmup, no filename specified")
 
 
 @manager.command
