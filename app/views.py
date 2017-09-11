@@ -10,9 +10,9 @@ address = Blueprint('address', __name__, url_prefix='/address')
 @address.route('/validate')
 @crossdomain(origin='*')
 def validate_address():
-    arg_address = request.args.get('address')
+    arg_address = request.args.get('address') or request.args.get('email')
     if not arg_address:
-        return make_response(jsonify({'error': 'address parameter required'}), 400)
+        return make_response(jsonify({'error': 'email or address parameter required'}), 400)
 
     validated, metrics = flanker.addresslib.address.validate_address(arg_address, metrics=True, mx_lookup=False)
     current_app.metrics.update(metrics)

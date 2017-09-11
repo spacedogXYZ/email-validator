@@ -1,6 +1,6 @@
 //
 // Email Address Validation Plugin
-// forked from https://github.com/validation/mailgun-demo/blob/master/mailgun_validator.js
+// forked from https://github.com/mailgun/validator-demo/blob/master/mailgun_validator.js
 //
 // Attaching to a form:
 //
