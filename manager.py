@@ -1,20 +1,16 @@
 import sys
 import logging
-# suppress some of flankers verbose parser logs
-logging.getLogger("flanker.addresslib.parser").setLevel(logging.ERROR)
+log = logging.getLogger(__name__)
 
 from app.app import app, rq
+from app import jobs
 
 from flask_script import Manager
 from flask_rq2.script import RQManager
 
-
-from app import jobs
-
 manager = Manager(app)
 manager.add_command('rq', RQManager(rq))
 
-log = logging.getLogger(__name__)
 
 @manager.option('-f', '--filename', dest='filename', default=None)
 def warm_cache(filename):
@@ -33,6 +29,7 @@ def warm_cache(filename):
 
 @manager.command
 def queue_nightly_tasks():
+    log.info("queue_nightly_tasks")
     jobs.validate_new_emails.queue()
     # jobs.validate_old_emails.queue()
 

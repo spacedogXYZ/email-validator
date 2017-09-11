@@ -1,18 +1,12 @@
 from flask import Flask, make_response, render_template, jsonify, request
+from logger import configure_logging
+
 from mxcache import MxCache
 from metrics import Metrics
 
-import logging
-
 app = Flask('app')
 app.config.from_object('app.config')
-# setup logging before further config
-if app.config.get('DEBUG'):
-    loglevel = logging.INFO
-else:
-    loglevel = logging.ERROR
-logging.basicConfig(level=loglevel)
-
+configure_logging(app.config.get('DEBUG'))
 
 mxcache = MxCache(app)
 metrics = Metrics(app)

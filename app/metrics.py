@@ -1,4 +1,9 @@
-from kairos import Timeseries
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter('ignore', UserWarning)
+    from kairos import Timeseries
+    # ignore undefined backend warnings
+
 from collections import defaultdict
 import time
 
