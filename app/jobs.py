@@ -71,7 +71,7 @@ def flanker_validate(email):
             suggested_email = '%s@%s' % (parsed.mailbox, suggested_hostname)
             log.info('suggestion {}'.format(suggested_email))
             # save suggestion to redis list
-            rq.connection.append(results_hash('suggestions'), suggested_email)
+            rq.connection.lpush(results_hash('suggestions'), "{},{}".format(email,suggested_email))
             data['suggested_email'] = suggested_email
 
     return data
@@ -117,11 +117,20 @@ def unsubscribe_from_crm():
 
 @rq.job
 def send_admin_report():
-    flanker_results = rq.connection.get(results_hash('flanker'))
-    briteverify_results = rq.connection.get(results_hash('briteverify'))
-    suggestions_list = rq.connection.get(results_hash('suggestions'))
+    flanker_results = rq.connection.hgetall(results_hash('flanker'))
+    briteverify_results = rq.connection.hgetall(results_hash('briteverify'))
+
+    # rehydrate email,suggestion from redis list
+    suggestions_list = []
+    for l in rq.connection.lrange(results_hash('suggestions'),0,-1):
+        suggestions_list.append(l.split(','))
 
     print "flanker_results",flanker_results
     print "briteverify_results",briteverify_results
     print "suggestions_list",suggestions_list
 
+    if app.config.get('DEBUG'):
+        # during testing, remove results
+        rq.connection.delete(results_hash('flanker'))
+        rq.connection.delete(results_hash('briteverify'))
+        rq.connection.delete(results_hash('suggestions'))
