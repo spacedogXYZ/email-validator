@@ -18,14 +18,15 @@ class ActionKitCRM(BaseCRM):
     def check_bgreport(self, report_name, max_checks=5):
         # run_bgreport and await results, with progressive backoff
         result = self.client.run_bgreport(report_name)
-        log.info('run_bgreport({})'.format(report_name))
+        log.info('run_bgreport({}) max={}'.format(report_name, max_checks))
         if result['completed']:
             return result['details']['results']
 
         checked = 0
-        while(checked <= max_checks):
-            time.sleep(checked)
-            log.info('no result, sleep({})'.format(checked))
+        while(checked < max_checks):
+            exp_backoff = 2**checked-1
+            time.sleep(exp_backoff)
+            log.info('no result, sleep({})'.format(exp_backoff))
             result = self.client.get(result['resource_uri'])
             if result['completed']:
                 log.info("got {} results".format(len(result['details']['results'])))
@@ -40,7 +41,7 @@ class ActionKitCRM(BaseCRM):
         return result
 
     def new_emails(self):
-        result = self.check_bgreport('emails_last_24_hours')
+        result = self.check_bgreport('emails_last_24_hours', max_checks=5)
         # returns a list for each row, flatten results into one list
         emails_list = []
         for row in result:
