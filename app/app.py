@@ -1,11 +1,10 @@
 from flask import Flask, make_response, render_template, jsonify, request
 from mxcache import MxCache
 from metrics import Metrics
-from flask_rq2 import RQ
 
 import logging
 
-app = Flask('mailvalidate')
+app = Flask('app')
 app.config.from_object('app.config')
 # setup logging before further config
 if app.config.get('DEBUG'):
@@ -18,6 +17,7 @@ logging.basicConfig(level=loglevel)
 mxcache = MxCache(app)
 metrics = Metrics(app)
 
+from flask_rq2 import RQ
 RQ_ASYNC = app.config.get('RQ_ASYNC', False)
 rq = RQ(async=RQ_ASYNC)
 rq.app_worker_path = 'app.worker_preload'
@@ -36,7 +36,7 @@ def test_form():
     return render_template('form.html')
 
 
-@app.route('/test-credo')
+@app.route('/test/credo')
 def test_credo():
     return render_template('credo-form.html')
 

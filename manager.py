@@ -5,7 +5,7 @@ logging.getLogger("flanker.addresslib.parser").setLevel(logging.ERROR)
 
 from app.app import app, rq
 
-from flask.ext.script import Manager
+from flask_script import Manager
 from flask_rq2.script import RQManager
 
 
