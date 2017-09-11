@@ -97,7 +97,7 @@ def save_to_crm():
 
     email = validation_result['email']
     status = validation_result['status']
-    log.info('save_to_crm {}:{}'.format(email, status))
+
     crm_response = crm_instance.set_user_status(email, status)
     return crm_response
 
@@ -111,7 +111,7 @@ def unsubscribe_from_crm():
 
     email = validation_result['email']
     status = validation_result['status']
-    log.info('save_to_crm {}:{}'.format(email, status))
+
     crm_response = crm_instance.unsubscribe_user(email)
     return crm_response
 
