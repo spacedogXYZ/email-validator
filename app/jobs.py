@@ -1,7 +1,9 @@
-from .app import app, rq
+from flask import render_template, jsonify
+from .app import app, rq, mail
 from rq import get_current_job
 from integrations import base_crm, briteverify
 import flanker.addresslib.address
+from flask_mail import Message
 
 import logging
 from datetime import datetime
@@ -20,6 +22,9 @@ def validate_new_emails():
 
     # get newly subscribed addresses from CRM
     to_validate = crm_instance.new_emails()
+    if app.config.get('DEBUG'):
+        import random
+        to_validate = random.sample(to_validate, 50)
 
     for email in to_validate:
         simple_validation_job = flanker_validate.queue(email=email)
@@ -125,9 +130,23 @@ def send_admin_report():
     for l in rq.connection.lrange(results_hash('suggestions'),0,-1):
         suggestions_list.append(l.split(','))
 
-    print "flanker_results",flanker_results
-    print "briteverify_results",briteverify_results
-    print "suggestions_list",suggestions_list
+    admin_report = render_template('admin_report.txt',
+        new_emails=flanker_results,
+        old_emails=briteverify_results,
+        suggestions_list=suggestions_list)
+    
+    if app.config.get('ADMIN_WEBHOOK'):
+        import requests
+        requests.post(app.config.get('ADMIN_WEBHOOK'),
+            jsonify({'text': admin_report})
+        )
+
+    ADMIN_EMAILS = app.config.get('ADMIN_EMAILS')
+    if ADMIN_EMAILS:
+        msg = Message('test subject', sender=ADMIN_EMAILS[0], recipients=ADMIN_EMAILS)
+        msg.body = admin_report
+        with app.app_context():
+            mail.send(msg)
 
     if app.config.get('DEBUG'):
         # during testing, remove results

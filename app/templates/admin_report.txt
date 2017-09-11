@@ -1,0 +1,11 @@
+* Nightly Mail Validation *
+
+New Emails in last 24 Hours:
+{{new_emails}}
+
+Inactive Emails in last 30 Days:
+{{old_emails}}
+
+Suggested Corrections:
+{% for email,suggestion in suggestions_list %}
+    {{email}}, {{suggestion}}{%endfor%}

@@ -3,6 +3,7 @@ from logger import configure_logging
 
 from mxcache import MxCache
 from metrics import Metrics
+from flask_mail import Mail
 
 app = Flask('app')
 app.config.from_object('app.config')
@@ -10,6 +11,7 @@ configure_logging(app.config.get('DEBUG'))
 
 mxcache = MxCache(app)
 metrics = Metrics(app)
+mail = Mail(app)
 
 from flask_rq2 import RQ
 RQ_ASYNC = app.config.get('RQ_ASYNC', False)
