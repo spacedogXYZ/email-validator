@@ -14,7 +14,7 @@ metrics = Metrics(app)
 mail = Mail(app)
 
 from flask_rq2 import RQ
-RQ_ASYNC = app.config.get('RQ_ASYNC', False)
+RQ_ASYNC = 'REDIS_URL' in app.config.keys()
 rq = RQ(async=RQ_ASYNC)
 rq.app_worker_path = 'app.worker_preload'
 rq.init_app(app)
