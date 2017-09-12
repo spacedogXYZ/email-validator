@@ -46,7 +46,7 @@ def validate_old_emails():
         save_result_job = save_to_crm.queue(stage='briteverify', depends_on=simple_validation_job)
 
         if status in ['invalid', 'disposable']:
-            crm_instance.unsubscribe(email)
+            save_to_crm.queue(stage='unsubscribe', depends_on=save_result_job)
 
     # send admin report after last result is done
     admin_report_job = send_admin_report.queue(depends_on=save_result_job)
@@ -103,22 +103,12 @@ def save_to_crm(stage='flanker'):
     email = validation_result['email']
     status = validation_result['status']
 
+    if app.DEBUG:
+        return True
+
     crm_complete = crm_instance.set_user_status(stage, email, status)
     return crm_complete
 
-@rq.job
-def unsubscribe_from_crm():
-    crm_instance = base_crm.get_instance()
-
-    # get results of job dependency
-    job = get_current_job(rq.connection)
-    validation_result = job.dependency.result
-
-    email = validation_result['email']
-    status = validation_result['status']
-
-    crm_complete = crm_instance.unsubscribe_user(email)
-    return crm_complete
 
 @rq.job
 def send_admin_report():

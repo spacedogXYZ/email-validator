@@ -17,11 +17,11 @@ class BaseCRM(object):
         """
         raise NotImplementedError()
 
-    def set_user_status(self, email, data):
+    def set_user_status(self, stage, email, data):
+        """
+        Sets user status to proper CRM storage, depending on validation stage
+        """
         raise NotImplementedError() 
-
-    def unsubscribe_user(email):
-        raise NotImplementedError()
 
 import os
 

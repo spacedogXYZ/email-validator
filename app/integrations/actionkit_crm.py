@@ -17,7 +17,8 @@ class ActionKitCRM(BaseCRM):
         self.ak_page_names = {
             'new_emails': os.environ.get('AK_NEW_EMAILS_REPORT_NAME'),
             'flanker': os.environ.get('AK_FLANKER_IMPORT_NAME'),
-            'briteverify': os.environ.get('AK_BRITEVERIFY_IMPORT_NAME')
+            'briteverify': os.environ.get('AK_BRITEVERIFY_IMPORT_NAME'),
+            'unsubscribe': os.environ.get('AK_UNSUBSCRIBE'),
         }
 
     def check_bgreport(self, report_name, max_checks=5):
@@ -54,12 +55,9 @@ class ActionKitCRM(BaseCRM):
         return emails_list
 
     def set_user_status(self, stage, email, status):
-        response = self.client.post('/rest/v1/action', json={
+        response = self.client.post('/rest/v1/action/', json={
             'page': self.ak_page_names[stage],
             'email': email,
             'action_status': status})
         return response.get('status') == 'complete'
 
-    def unsubscribe_user(self, email):
-        # TODO
-        return True
