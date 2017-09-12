@@ -14,6 +14,11 @@ class ActionKitCRM(BaseCRM):
             username=os.environ.get('AK_USER'),
             password=os.environ.get('AK_PASS')
         )
+        self.ak_page_names = {
+            'new_emails': os.environ.get('AK_NEW_EMAILS_REPORT_NAME'),
+            'flanker': os.environ.get('AK_FLANKER_IMPORT_NAME'),
+            'briteverify': os.environ.get('AK_BRITEVERIFY_IMPORT_NAME')
+        }
 
     def check_bgreport(self, report_name, max_checks=5):
         # run_bgreport and await results, with progressive backoff
@@ -41,22 +46,19 @@ class ActionKitCRM(BaseCRM):
         return result
 
     def new_emails(self):
-        result = self.check_bgreport('emails_last_24_hours', max_checks=5)
+        result = self.check_bgreport(self.ak_page_names['new_emails'], max_checks=5)
         # returns a list for each row, flatten results into one list
         emails_list = []
         for row in result:
             emails_list.append(row[0])
         return emails_list
 
-    def set_user_status(self, email, data):
-        user = self.client.user.list(email=email)
-        if user:
-            log.info("update {} {}".format(email,data))
-            # TODO
-            # return user[0].update(data)
-            return True
-        else:
-            return False
+    def set_user_status(self, stage, email, status):
+        response = self.client.post('/rest/v1/action', json={
+            'page': self.ak_page_names[stage],
+            'email': email,
+            'action_status': status})
+        return response.get('status') == 'complete'
 
     def unsubscribe_user(self, email):
         # TODO

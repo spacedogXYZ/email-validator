@@ -28,7 +28,7 @@ def validate_new_emails():
 
     for email in to_validate:
         simple_validation_job = flanker_validate.queue(email=email)
-        save_result_job = save_to_crm.queue(depends_on=simple_validation_job)
+        save_result_job = save_to_crm.queue(stage='flanker', depends_on=simple_validation_job)
 
     # send admin report after last result is done
     admin_report_job = send_admin_report.queue(depends_on=save_result_job)
@@ -43,7 +43,7 @@ def validate_old_emails():
 
     for email in to_validate:
         simple_validation_job = briteverify_validate.queue(email=email)
-        save_result_job = save_to_crm.queue(depends_on=simple_validation_job)
+        save_result_job = save_to_crm.queue(stage='briteverify', depends_on=simple_validation_job)
 
         if status in ['invalid', 'disposable']:
             crm_instance.unsubscribe(email)
@@ -93,7 +93,7 @@ def briteverify_validate(email):
     return {'email': email, 'status': status}
 
 @rq.job
-def save_to_crm():
+def save_to_crm(stage='flanker'):
     crm_instance = base_crm.get_instance()
 
     # get results from job dependency
@@ -103,8 +103,8 @@ def save_to_crm():
     email = validation_result['email']
     status = validation_result['status']
 
-    crm_response = crm_instance.set_user_status(email, status)
-    return crm_response
+    crm_complete = crm_instance.set_user_status(stage, email, status)
+    return crm_complete
 
 @rq.job
 def unsubscribe_from_crm():
@@ -117,8 +117,8 @@ def unsubscribe_from_crm():
     email = validation_result['email']
     status = validation_result['status']
 
-    crm_response = crm_instance.unsubscribe_user(email)
-    return crm_response
+    crm_complete = crm_instance.unsubscribe_user(email)
+    return crm_complete
 
 @rq.job
 def send_admin_report():
