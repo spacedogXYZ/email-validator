@@ -103,7 +103,7 @@ def save_to_crm(stage='flanker'):
     email = validation_result['email']
     status = validation_result['status']
 
-    if app.DEBUG:
+    if app.config.get('DEBUG'):
         return True
 
     crm_complete = crm_instance.set_user_status(stage, email, status)

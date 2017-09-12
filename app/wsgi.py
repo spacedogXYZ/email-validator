@@ -11,9 +11,9 @@ from werkzeug.contrib.fixers import ProxyFix
 
 from app import app as application
 
-if os.environ.get('SENTRY_DSN'):
+if application.config.get('SENTRY_DSN'):
     from raven.contrib.flask import Sentry
     sentry = Sentry()
-    sentry.init_app(application)
+    sentry.init_app(application, dsn=application.config.get('SENTRY_DSN'))
 
 application.wsgi_app = ProxyFix(application.wsgi_app)
