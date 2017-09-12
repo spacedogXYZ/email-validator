@@ -8,7 +8,7 @@ def configure_logging(debug):
     if debug:
         loglevel = logging.INFO
     else:
-        loglevel = logging.ERROR
+        loglevel = logging.WARNING
     logging.basicConfig(level=loglevel)
 
     # suppress flankers super verbose parser logs
