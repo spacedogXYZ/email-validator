@@ -1,6 +1,7 @@
 import os
+from distutils.util import strtobool
 
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = strtobool(os.environ.get('DEBUG', False))
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/')
 RQ_REDIS_URL = REDIS_URL
 DNS_TIMEOUT = os.environ.get('DNS_TIMEOUT', 2)  # originally 5.2
@@ -13,9 +14,6 @@ MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', True)
-if DEBUG:
-    MAIL_DEBUG = 1
-else:
-    MAIL_DEBUG = 0
+MAIL_DEBUG = DEBUG
 
 ADMIN_WEBHOOK = os.environ.get('ADMIN_WEBHOOK', None)
