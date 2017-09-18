@@ -34,7 +34,7 @@ def warm_cache(filename):
 def queue_nightly_tasks():
     log.info("queue_nightly_tasks")
     jobs.validate_new_emails.queue()
-    # jobs.validate_old_emails.queue()
+    jobs.validate_old_emails.queue()
 
 if __name__ == "__main__":
     manager.run()

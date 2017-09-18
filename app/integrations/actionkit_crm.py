@@ -16,6 +16,7 @@ class ActionKitCRM(BaseCRM):
         )
         self.ak_page_names = {
             'new_emails': os.environ.get('AK_NEW_EMAILS_REPORT_NAME'),
+            'old_emails': os.environ.get('AK_OLD_EMAILS_REPORT_NAME'),
             'flanker': os.environ.get('AK_FLANKER_IMPORT_NAME'),
             'briteverify': os.environ.get('AK_BRITEVERIFY_IMPORT_NAME'),
             'unsubscribe': os.environ.get('AK_UNSUBSCRIBE'),
@@ -48,6 +49,14 @@ class ActionKitCRM(BaseCRM):
 
     def new_emails(self):
         result = self.check_bgreport(self.ak_page_names['new_emails'], max_checks=5)
+        # returns a list for each row, flatten results into one list
+        emails_list = []
+        for row in result:
+            emails_list.append(row[0])
+        return emails_list
+
+    def old_emails(self):
+        result = self.check_bgreport(self.ak_page_names['old_emails'], max_checks=5)
         # returns a list for each row, flatten results into one list
         emails_list = []
         for row in result:
