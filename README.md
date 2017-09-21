@@ -27,6 +27,7 @@ run on your own server, for privacy and performance
 - caches mail server responses in Redis, or thread-local dictionary
 - warm cache with `python manager.py warm_cache -f REMOTE_FILE` or `python manager.py warm_cache -f - < LOCAL_FILE`
 - when running in Heroku, you may want to run `python manager.py warm_cache` before `uwsgi uwsgi.ini`, to ensure flanker.address_lib parser is run successfully
+- when running in Heroku, you may run multiple workers in one dyno with `supervisord -c supervisor.conf -n`
 
 ## Development
 - create python virtual environment `virtualenv .venv`    

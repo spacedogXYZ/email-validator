@@ -6,7 +6,7 @@ class NoFlankerParsingFilter(logging.Filter):
 
 def configure_logging(debug):
     if debug:
-        loglevel = logging.INFO
+        loglevel = logging.DEBUG
     else:
         loglevel = logging.WARNING
     logging.basicConfig(level=loglevel)
