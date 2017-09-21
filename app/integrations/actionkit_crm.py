@@ -19,7 +19,7 @@ class ActionKitCRM(BaseCRM):
             'old_emails': os.environ.get('AK_OLD_EMAILS_REPORT_NAME'),
             'flanker': os.environ.get('AK_FLANKER_IMPORT_NAME'),
             'briteverify': os.environ.get('AK_BRITEVERIFY_IMPORT_NAME'),
-            'unsubscribe': os.environ.get('AK_UNSUBSCRIBE'),
+            'unsubscribe': os.environ.get('AK_UNSUBSCRIBE', 'unsubscribe'),
         }
 
     def check_bgreport(self, report_name, max_checks=5):

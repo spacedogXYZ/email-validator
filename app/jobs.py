@@ -104,6 +104,10 @@ def save_to_crm(stage='flanker'):
         return True
 
     crm_complete = crm_instance.set_user_status(stage, email, status)
+
+    if stage == 'briteverify' and status.lower() == 'invalid':
+        crm_unsubscribe = crm_instance.set_user_status('unsubscribe', email, status)
+
     return crm_complete
 
 
