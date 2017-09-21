@@ -36,5 +36,18 @@ def queue_nightly_tasks():
     jobs.validate_new_emails.queue()
     jobs.validate_old_emails.queue()
 
+@manager.option('-s', '--stage', dest='stage', default='briteverify')
+def delete_crm_actions(stage):
+    from app.integrations import base_crm
+    crm_instance = base_crm.get_instance()
+
+    actions_to_delete = crm_instance.get_stage_actions(stage)
+    print "got",len(actions_to_delete),"actions to delete"
+
+    confirm = raw_input('This is a destructive action! Continue? (Y/N) ')
+    if confirm == 'Y':
+        for action in actions_to_delete:
+            crm_instance.delete_user_status(action['id'])
+
 if __name__ == "__main__":
     manager.run()

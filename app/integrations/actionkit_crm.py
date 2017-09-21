@@ -23,7 +23,7 @@ class ActionKitCRM(BaseCRM):
             'unsubscribe': os.environ.get('AK_UNSUBSCRIBE', 'unsubscribe'),
         }
 
-    def check_bgreport(self, report_name, max_checks=5):
+    def check_bgreport(self, report_name, max_checks=5, force_refresh=False):
         # run_bgreport and await results, with progressive backoff
         # downloads the file from ActionKit, because it may be too large to get over the API reponse
 
@@ -31,7 +31,7 @@ class ActionKitCRM(BaseCRM):
         result = self.client.raw('POST', '/rest/v1/report/background/{report_name}/'.format(report_name=report_name),
             params={
                 'format': 'csv', # to force a download
-                #'refresh': True
+                'refresh': force_refresh
             })
         report_uri = result.headers['Location']
         report_path = urlparse(report_uri).path
@@ -60,6 +60,17 @@ class ActionKitCRM(BaseCRM):
         )
         return result
 
+    def get_objects(self, path):
+        # get a list of objects from a paginated response
+        object_list = []
+        
+        response = self.client.get(path)
+        object_list.extend(response['objects'])
+        while(response['meta']['next']):
+            response = self.client.get(response['meta']['next'])
+            object_list.extend(response['objects'])
+        return object_list
+
     def new_emails(self):
         result = self.check_bgreport(self.ak_page_names['new_emails'], max_checks=5)
         emails_list = result.text.split()
@@ -79,3 +90,12 @@ class ActionKitCRM(BaseCRM):
             'action_status': status})
         return response.get('status') == 'complete'
 
+    def get_stage_actions(self, stage):
+        stage_response = self.client.get('/rest/v1/page/', params={'name': self.ak_page_names[stage]})
+        actions_uri = stage_response['objects'][0]['actions']
+        actions_list = self.get_objects(actions_uri)
+        return actions_list
+
+    def delete_user_status(self, action_id):
+        response_code = self.client.raw('DELETE', '/rest/v1/action/{}'.format(action_id))
+        return response_code
