@@ -12,5 +12,4 @@ def check(email):
     if response.get('disposable'):
         status = 'disposable'
     # check role_address as well?
-    return {'email':email,
-            'status':status}
+    return status
