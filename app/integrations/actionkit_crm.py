@@ -23,19 +23,20 @@ class ActionKitCRM(BaseCRM):
             'unsubscribe': os.environ.get('AK_UNSUBSCRIBE', 'unsubscribe'),
         }
 
-    def check_bgreport(self, report_name, max_checks=5, force_refresh=False):
-        # run_bgreport and await results, with progressive backoff
+    def get_bgreport(self, report_name, max_checks=5, force_refresh=False, cache=60*60*24):
+        # run report in the background and await results, with progressive backoff
         # downloads the file from ActionKit, because it may be too large to get over the API reponse
 
-        log.debug('run_bgreport({}) max={}'.format(report_name, max_checks))
+        log.debug('get_bgreport({}) max={}'.format(report_name, max_checks))
         result = self.client.raw('POST', '/rest/v1/report/background/{report_name}/'.format(report_name=report_name),
             params={
                 'format': 'csv', # to force a download
-                'refresh': force_refresh
+                'refresh': force_refresh,
+                'cache_duration': cache
             })
         report_uri = result.headers['Location']
         report_path = urlparse(report_uri).path
-        log.debug('run_bgreport checking {}'.format(report_path))
+        log.debug('get_bgreport checking {}'.format(report_path))
 
         checked = 0
         while(checked < max_checks):
@@ -46,11 +47,11 @@ class ActionKitCRM(BaseCRM):
             if result['completed'] == True:
                 if result['details']['status'] == 'complete':
                     download_path = result['details']['download_uri']
-                    log.debug('run_bgreport downloading {}'.format(download_path))
+                    log.debug('get_bgreport downloading {}'.format(download_path))
                     download = self.client.raw('GET', download_path)
                     return download
                 else:
-                    log.error('run_bgreport error {}'.format(result['message']))
+                    log.error('get_bgreport error {}'.format(result['message']))
             else:
                 checked += 1
 
@@ -72,13 +73,13 @@ class ActionKitCRM(BaseCRM):
         return object_list
 
     def new_emails(self):
-        result = self.check_bgreport(self.ak_page_names['new_emails'], max_checks=5)
+        result = self.get_bgreport(self.ak_page_names['new_emails'], max_checks=5)
         emails_list = result.text.split()
         log.info('got {} new emails'.format(len(emails_list)))
         return emails_list
 
     def old_emails(self):
-        result = self.check_bgreport(self.ak_page_names['old_emails'], max_checks=5)
+        result = self.get_bgreport(self.ak_page_names['old_emails'], max_checks=5)
         emails_list = result.text.split()
         log.info('got {} old emails'.format(len(emails_list)))
         return emails_list
