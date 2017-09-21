@@ -26,12 +26,17 @@ def validate_new_emails():
         import random
         to_validate = random.sample(to_validate, 50)
 
+    log.info('got {} new emails to validate'.format(len(to_validate)))
+
     for email in to_validate:
         simple_validation_job = flanker_validate.queue(email=email)
         save_result_job = save_to_crm.queue(stage='flanker', depends_on=simple_validation_job)
 
-    # send admin report after last result is done
-    admin_report_job = send_admin_report.queue(depends_on=save_result_job)
+    if to_validate:
+        # send admin report after last result is done
+        admin_report_job = send_admin_report.queue(depends_on=save_result_job)
+    else:
+        log.error('no new emails to validate')
 
 
 @rq.job('high')
@@ -41,12 +46,18 @@ def validate_old_emails():
     # get addresses from CRM that passed flanker 30 days ago, but have not opened an email
     to_validate = crm_instance.old_emails()
 
+    log.info('got {} old emails to validate'.format(len(to_validate)))
+
     for email in to_validate:
         simple_validation_job = briteverify_validate.queue(email=email)
         save_result_job = save_to_crm.queue(stage='briteverify', depends_on=simple_validation_job)
 
-    # send admin report after last result is done
-    admin_report_job = send_admin_report.queue(depends_on=save_result_job)
+    if to_validate:
+        # send admin report after last result is done
+        admin_report_job = send_admin_report.queue(depends_on=save_result_job)
+    else:
+        log.error('no old emails to validate')
+
 
 @rq.job('high')
 def flanker_validate(email):
@@ -78,6 +89,7 @@ def flanker_validate(email):
 
     return data
 
+
 @rq.job('high')
 def briteverify_validate(email):
     # run through briteverify validation
@@ -88,6 +100,7 @@ def briteverify_validate(email):
     rq.connection.hincrby(results_hash('briteverify'), status)
 
     return {'email': email, 'status': status}
+
 
 @rq.job('low')
 def save_to_crm(stage='flanker'):
