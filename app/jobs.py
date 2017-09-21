@@ -16,7 +16,7 @@ def results_hash(type):
         type=type
     )
 
-@rq.job
+@rq.job('high')
 def validate_new_emails():
     crm_instance = base_crm.get_instance()
 
@@ -34,7 +34,7 @@ def validate_new_emails():
     admin_report_job = send_admin_report.queue(depends_on=save_result_job)
 
 
-@rq.job
+@rq.job('high')
 def validate_old_emails():
     crm_instance = base_crm.get_instance()
 
@@ -45,13 +45,10 @@ def validate_old_emails():
         simple_validation_job = briteverify_validate.queue(email=email)
         save_result_job = save_to_crm.queue(stage='briteverify', depends_on=simple_validation_job)
 
-        if status in ['invalid', 'disposable']:
-            save_to_crm.queue(stage='unsubscribe', depends_on=save_result_job)
-
     # send admin report after last result is done
     admin_report_job = send_admin_report.queue(depends_on=save_result_job)
 
-@rq.job
+@rq.job('high')
 def flanker_validate(email):
     # run through flanker
     # a free, rules based validator
@@ -81,7 +78,7 @@ def flanker_validate(email):
 
     return data
 
-@rq.job
+@rq.job('high')
 def briteverify_validate(email):
     # run through briteverify validation
     # more comprehensive, but expensive check
@@ -92,7 +89,7 @@ def briteverify_validate(email):
 
     return {'email': email, 'status': status}
 
-@rq.job
+@rq.job('low')
 def save_to_crm(stage='flanker'):
     crm_instance = base_crm.get_instance()
 
@@ -110,7 +107,7 @@ def save_to_crm(stage='flanker'):
     return crm_complete
 
 
-@rq.job
+@rq.job('low')
 def send_admin_report():
     flanker_results = rq.connection.hgetall(results_hash('flanker'))
     briteverify_results = rq.connection.hgetall(results_hash('briteverify'))
