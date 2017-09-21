@@ -22,11 +22,11 @@ def validate_new_emails():
 
     # get newly subscribed addresses from CRM
     to_validate = crm_instance.new_emails()
-    if app.config.get('DEBUG'):
+    if app.config.get('DEBUG') and to_validate:
         import random
         to_validate = random.sample(to_validate, 50)
 
-    log.info('got {} new emails to validate'.format(len(to_validate)))
+    log.info('validating {} new emails'.format(len(to_validate)))
 
     for email in to_validate:
         simple_validation_job = flanker_validate.queue(email=email)
@@ -46,7 +46,7 @@ def validate_old_emails():
     # get addresses from CRM that passed flanker 30 days ago, but have not opened an email
     to_validate = crm_instance.old_emails()
 
-    log.info('got {} old emails to validate'.format(len(to_validate)))
+    log.info('validating {} old emails'.format(len(to_validate)))
 
     for email in to_validate:
         simple_validation_job = briteverify_validate.queue(email=email)
