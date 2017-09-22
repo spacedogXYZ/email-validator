@@ -1,10 +1,12 @@
-* Nightly Mail Validation *
+Nightly Mail Validation
 
 New Emails in last 24 Hours:
-{{new_emails}}
+{% for status, count in new_emails.items() %}
+- {{status}}: {{count}}{% endfor %}
 
 Inactive Emails in last 30 Days:
-{{old_emails}}
+{% for status, count in old_emails.items() %}
+- {{status}}: {{count}}{% endfor %}
 
 Suggested Corrections:
 {% for email,suggestion in suggestions_list %}

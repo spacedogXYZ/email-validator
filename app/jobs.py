@@ -151,7 +151,7 @@ def send_admin_report():
 
     ADMIN_EMAILS = app.config.get('ADMIN_EMAILS')
     if ADMIN_EMAILS:
-        msg = Message('test subject', sender=ADMIN_EMAILS[0], recipients=ADMIN_EMAILS)
+        msg = Message('Mailvalidate Report', sender=ADMIN_EMAILS[0], recipients=ADMIN_EMAILS)
         msg.body = admin_report
         with app.app_context():
             mail.send(msg)
