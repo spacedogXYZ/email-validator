@@ -79,6 +79,10 @@ def flanker_validate(email):
     if status == 'invalid':
         # try to correct hostname for suggestions
         parsed = flanker.addresslib.address.parse(email)
+        if not parsed:
+            log.error('unable to parse {}'.format(email))
+            return data
+
         suggested_hostname = flanker.addresslib.corrector.suggest(parsed.hostname)
         if suggested_hostname != parsed.hostname:
             suggested_email = '%s@%s' % (parsed.mailbox, suggested_hostname)
