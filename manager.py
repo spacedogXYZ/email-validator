@@ -36,6 +36,10 @@ def queue_nightly_tasks():
     jobs.validate_new_emails.queue()
     jobs.validate_old_emails.queue()
 
+@manager.command
+def send_admin_report():
+    jobs.send_admin_report.queue()
+
 @manager.option('-s', '--stage', dest='stage', default='briteverify')
 def delete_crm_actions(stage):
     from app.integrations import base_crm
