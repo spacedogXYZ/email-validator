@@ -148,6 +148,7 @@ def send_admin_report():
         requests.post(app.config.get('ADMIN_WEBHOOK'),
             jsonify({'text': admin_report})
         )
+        log.info('sent admin webhook')
 
     ADMIN_EMAILS = app.config.get('ADMIN_EMAILS')
     if ADMIN_EMAILS:
@@ -155,9 +156,11 @@ def send_admin_report():
         msg.body = admin_report
         with app.app_context():
             mail.send(msg)
+            log.info('sent admin email report')
 
     if app.config.get('DEBUG'):
         # during testing, remove results
         rq.connection.delete(results_hash('flanker'))
         rq.connection.delete(results_hash('briteverify'))
         rq.connection.delete(results_hash('suggestions'))
+        log.info('deleted results_hash')

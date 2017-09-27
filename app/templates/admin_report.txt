@@ -7,7 +7,3 @@ New Emails in last 24 Hours:
 Inactive Emails in last 30 Days:
 {% for status, count in old_emails.items() %}
 - {{status}}: {{count}}{% endfor %}
-
-Suggested Corrections:
-{% for email,suggestion in suggestions_list %}
-    {{email}}, {{suggestion}}{%endfor%}
