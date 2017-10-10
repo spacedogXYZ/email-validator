@@ -146,13 +146,15 @@ def send_admin_report():
     if app.config.get('ADMIN_WEBHOOK'):
         import requests
         requests.post(app.config.get('ADMIN_WEBHOOK'),
-            jsonify({'text': admin_report})
+            json = {'text': admin_report}
         )
         log.info('sent admin webhook')
 
     ADMIN_EMAILS = app.config.get('ADMIN_EMAILS')
     if ADMIN_EMAILS:
-        msg = Message('Mailvalidate Report', sender=ADMIN_EMAILS[0], recipients=ADMIN_EMAILS)
+        msg = Message('Mailvalidate Report',
+            sender=app.config.get('MAIL_DEFAULT_SENDER'),
+            recipients=ADMIN_EMAILS)
         msg.body = admin_report
         with app.app_context():
             mail.send(msg)
