@@ -15,7 +15,7 @@ dnspython==1.15.0
 dnsq==1.1.6
 enum34==1.1.6
 expiringdict==1.1.3
--e git+https://github.com/spacedogXYZ/flanker.git@ply-no-write-tables#egg=flanker
+-e git+https://github.com/spacedogXYZ/flanker.git#egg=flanker
 Flask==0.12.2
 Flask-Mail==0.9.1
 Flask-RQ2==17.0
