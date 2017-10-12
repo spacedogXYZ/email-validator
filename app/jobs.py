@@ -11,7 +11,7 @@ from datetime import datetime
 log = logging.getLogger(__name__)
 
 def results_hash(type):
-    return "{date}-{type}".format(
+    return "mailvalidate:{type}:{date}".format(
         date=datetime.now().date(),
         type=type
     )
@@ -160,9 +160,8 @@ def send_admin_report():
             mail.send(msg)
             log.info('sent admin email report')
 
-    if app.config.get('DEBUG'):
-        # during testing, remove results
-        rq.connection.delete(results_hash('flanker'))
-        rq.connection.delete(results_hash('briteverify'))
-        rq.connection.delete(results_hash('suggestions'))
-        log.info('deleted results_hash')
+    ONE_WEEK = 60*60*24*7 # in seconds
+    rq.connection.expire(results_hash('flanker'), ONE_WEEK)
+    rq.connection.expire(results_hash('briteverify'), ONE_WEEK)
+    rq.connection.expire(results_hash('suggestions'), ONE_WEEK)
+    log.info('set expiration for results_hash')
