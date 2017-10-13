@@ -84,11 +84,15 @@ class ActionKitCRM(BaseCRM):
         log.info('got {} old emails'.format(len(emails_list)))
         return emails_list
 
-    def set_user_status(self, stage, email, status):
-        response = self.client.post('/rest/v1/action/', json={
+    def set_user_status(self, stage, email, data):
+        
+        update = {
             'page': self.ak_page_names[stage],
             'email': email,
-            'action_status': status})
+        }
+        for key,value in data.items():
+            update['action_{}'.format(key)] = value
+        response = self.client.post('/rest/v1/action/', json=update)
         return response.get('status') == 'complete'
 
     def get_stage_actions(self, stage):

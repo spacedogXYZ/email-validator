@@ -120,10 +120,24 @@ def save_to_crm(stage='flanker'):
     if app.config.get('DEBUG'):
         return True
 
-    crm_complete = crm_instance.set_user_status(stage, email, status)
+    crm_complete = crm_instance.set_user_status(stage, email, {'status': status})
 
+    if stage == 'flanker' and 'suggested_email' in validation_result:
+        suggested_email = validation_result['suggested_email']
+        log.info('correcting {old} to {new}'.format(old=email, new=suggested_email))
+
+        if app.config.get('ACCEPT_FLANKER_SUGGESTIONS'):
+            # unsubscribe bad email
+            crm_unsubscribe = crm_instance.set_user_status('unsubscribe', email, {'status': status})
+            status = 'corrected'
+            crm_complete = crm_instance.set_user_status('flanker', suggested_email, {
+                'status': status,
+                'corrected': email
+            })
+            
     if stage == 'briteverify' and status.lower() == 'invalid':
-        crm_unsubscribe = crm_instance.set_user_status('unsubscribe', email, status)
+        log.info('unsubscribing invalid {new}'.format(email))
+        crm_unsubscribe = crm_instance.set_user_status('unsubscribe', email, {'status': status})
 
     return crm_complete
 
