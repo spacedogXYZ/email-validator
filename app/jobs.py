@@ -134,6 +134,7 @@ def save_to_crm(stage='flanker'):
                 'status': status,
                 'corrected': email
             })
+            rq.connection.hincrby(results_hash('flanker'), 'corrected')
             
     if stage == 'briteverify' and status.lower() == 'invalid':
         log.info('unsubscribing invalid {new}'.format(email))
