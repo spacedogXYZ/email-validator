@@ -23,6 +23,12 @@ class BaseCRM(object):
         """
         raise NotImplementedError() 
 
+    def get_user_first_action(self, email):
+        """
+        Gets first action taken by a user, for tracking corrections
+        """
+        return None
+
 import os
 
 def get_instance():

@@ -129,10 +129,14 @@ def save_to_crm(stage='flanker'):
         if app.config.get('ACCEPT_FLANKER_SUGGESTIONS'):
             # unsubscribe bad email
             crm_unsubscribe = crm_instance.set_user_status('unsubscribe', email, {'status': status})
+            # track original action (if available)
+            original_action = crm_instance.get_user_first_action(email)
+            # update user with suggested email and corrected status
             status = 'corrected'
             crm_complete = crm_instance.set_user_status('flanker', suggested_email, {
                 'status': status,
-                'corrected': email
+                'corrected': email,
+                'original_action': original_action
             })
             rq.connection.hincrby(results_hash('flanker'), 'corrected')
             

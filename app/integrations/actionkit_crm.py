@@ -61,6 +61,10 @@ class ActionKitCRM(BaseCRM):
         )
         return result
 
+    def get_user(self, email):
+        user = self.client.get('/rest/v1/user/', params={'email': email})['objects'][0]
+        return user
+
     def get_objects(self, path):
         # get a list of objects from a paginated response
         object_list = []
@@ -85,7 +89,6 @@ class ActionKitCRM(BaseCRM):
         return emails_list
 
     def set_user_status(self, stage, email, data):
-        
         update = {
             'page': self.ak_page_names[stage],
             'email': email,
@@ -94,6 +97,13 @@ class ActionKitCRM(BaseCRM):
             update['action_{}'.format(key)] = value
         response = self.client.post('/rest/v1/action/', json=update)
         return response.get('status') == 'complete'
+
+    def get_user_first_action(self, email):
+        user = self.get_user(email)
+        actions = self.client.get(user['actions'])
+        first_action = actions['objects'][0]
+        page = self.client.get(first_action['page'])
+        return page['name']
 
     def get_stage_actions(self, stage):
         stage_response = self.client.get('/rest/v1/page/', params={'name': self.ak_page_names[stage]})
