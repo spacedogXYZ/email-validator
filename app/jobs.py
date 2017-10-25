@@ -141,7 +141,7 @@ def save_to_crm(stage='flanker'):
             rq.connection.hincrby(results_hash('flanker'), 'corrected')
             
     if stage == 'briteverify' and status.lower() == 'invalid':
-        log.info('unsubscribing invalid {new}'.format(email))
+        log.info('unsubscribing invalid {}'.format(email))
         crm_unsubscribe = crm_instance.set_user_status('unsubscribe', email, {'status': status, 'stage': stage})
 
     return crm_complete
