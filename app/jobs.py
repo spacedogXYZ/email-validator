@@ -149,6 +149,11 @@ def save_to_crm(stage='flanker'):
 
 @rq.job('low')
 def send_admin_report():
+    if rq.connection.get(results_hash('admin_report')):
+        log.info('refusing to send duplicate admin email')
+        # already sent admin report for today, exit early
+        return True
+
     flanker_results = rq.connection.hgetall(results_hash('flanker'))
     briteverify_results = rq.connection.hgetall(results_hash('briteverify'))
 
@@ -178,6 +183,9 @@ def send_admin_report():
         with app.app_context():
             mail.send(msg)
             log.info('sent admin email report')
+
+    # mark admin_report sent
+    rq.connection.set(results_hash('admin_report'), True)
 
     ONE_WEEK = 60*60*24*7 # in seconds
     rq.connection.expire(results_hash('flanker'), ONE_WEEK)
