@@ -1,9 +1,11 @@
 Nightly Mail Validation
 
-New Emails in last 24 Hours:
+STAGE 1: New Emails in last 24 Hours:
+Checked against common mail server rules and corrected for typos
 {% for status, count in new_emails.items() %}
 - {{status}}: {{count}}{% endfor %}
 
-Inactive Emails in last 30 Days:
+STAGE 2: Emails inactive for 30 days:
+Anything invalid at this point will be unsubscribed
 {% for status, count in old_emails.items() %}
 - {{status}}: {{count}}{% endfor %}
