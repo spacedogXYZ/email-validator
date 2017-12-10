@@ -29,6 +29,11 @@ run on your own server, for privacy and performance
 - when running in Heroku, you may want to run `python manager.py warm_cache` before `uwsgi uwsgi.ini`, to ensure flanker.address_lib parser is run successfully
 - when running in Heroku, you may run multiple workers in one dyno with `supervisord -c supervisor.conf -n`
 
+## Troubleshooting
+- monitor queue depth with `python manager.py rq info`
+- clear current jobs with `python manager.py rq empty`
+- retry failed jobs with `python manager.py rq requeue`
+
 ## Development
 - create python virtual environment `virtualenv .venv`    
 - install pip requirements `pip install -r requirements.txt`
