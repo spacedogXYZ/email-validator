@@ -154,6 +154,9 @@ def send_admin_report():
         # already sent admin report for today, exit early
         return True
 
+    # mark admin_report sent
+    rq.connection.set(results_hash('admin_report'), True)
+
     flanker_results = rq.connection.hgetall(results_hash('flanker'))
     briteverify_results = rq.connection.hgetall(results_hash('briteverify'))
 
@@ -183,9 +186,6 @@ def send_admin_report():
         with app.app_context():
             mail.send(msg)
             log.info('sent admin email report')
-
-    # mark admin_report sent
-    rq.connection.set(results_hash('admin_report'), True)
 
     ONE_WEEK = 60*60*24*7 # in seconds
     rq.connection.expire(results_hash('flanker'), ONE_WEEK)
