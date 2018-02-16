@@ -1,6 +1,7 @@
 from flask import render_template, jsonify
 from .app import app, rq, mail
 from rq import get_current_job
+from rq.exceptions import NoSuchJobError
 from integrations import base_crm, briteverify
 import flanker.addresslib.address
 from flask_mail import Message
@@ -112,10 +113,16 @@ def save_to_crm(stage='flanker'):
 
     # get results from job dependency
     job = get_current_job(rq.connection)
-    validation_result = job.dependency.result
+    try:
+        validation_result = job.dependency.result
 
-    email = validation_result['email']
-    status = validation_result['status']
+        email = validation_result['email']
+        status = validation_result['status']
+    except NoSuchJobError:
+        # raise alarm, but quiet output
+        if app.config.get('SENTRY_DSN'):
+            app.sentry.captureException()
+        return False
 
     if app.config.get('DEBUG'):
         return True

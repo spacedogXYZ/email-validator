@@ -15,5 +15,6 @@ if application.config.get('SENTRY_DSN'):
     from raven.contrib.flask import Sentry
     sentry = Sentry()
     sentry.init_app(application, dsn=application.config.get('SENTRY_DSN'))
+    app.sentry = sentry
 
 application.wsgi_app = ProxyFix(application.wsgi_app)
