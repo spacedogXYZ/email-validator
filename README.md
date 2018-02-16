@@ -30,7 +30,7 @@ run on your own server, for privacy and performance
 - when running in Heroku, you may run multiple workers in one dyno with `supervisord -c supervisor.conf -n`
 
 ## Troubleshooting
-- monitor queue depth with `python manager.py rq info`
+- monitor queue depth with `python manager.py rq info --interval 1`
 - clear current jobs with `python manager.py rq empty`
 - retry failed jobs with `python manager.py rq requeue`
 
