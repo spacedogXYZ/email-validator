@@ -120,8 +120,7 @@ def save_to_crm(stage='flanker'):
         status = validation_result['status']
     except NoSuchJobError:
         # raise alarm, but quiet output
-        if app.config.get('SENTRY_DSN'):
-            app.sentry.captureException()
+        log.error('NoSuchJobError for validation result {}'.format(email))
         return False
 
     if app.config.get('DEBUG'):
