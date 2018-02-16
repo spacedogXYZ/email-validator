@@ -1,6 +1,6 @@
 from .base_crm import BaseCRM
 from actionkit.rest import ActionKit
-from actionkit.errors import ActionKitGeneralError
+from actionkit.errors import ActionKitGeneralError, ActionKitMalformedRequest
 import os, time
 from urlparse import urlparse
 import logging
@@ -95,7 +95,14 @@ class ActionKitCRM(BaseCRM):
         }
         for key,value in data.items():
             update['action_{}'.format(key)] = value
-        response = self.client.post('/rest/v1/action/', json=update)
+
+        try:
+            response = self.client.post('/rest/v1/action/', json=update)
+        except ActionKitMalformedRequest:
+            # malformed emails fail actionkit validation, so throws an error
+            log.info('malformed email {}'.format(email))
+            return False
+
         return response.get('status') == 'complete'
 
     def get_user_first_action(self, email):
