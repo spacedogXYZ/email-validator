@@ -120,7 +120,7 @@ def save_to_crm(stage='flanker'):
         status = validation_result['status']
     except NoSuchJobError:
         # raise alarm, but quiet output
-        log.error('NoSuchJobError for validation result {}'.format(email))
+        log.error('NoSuchJobError for validation result {}'.format(job))
         return False
 
     if app.config.get('DEBUG'):
