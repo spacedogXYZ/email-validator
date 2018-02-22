@@ -15,7 +15,8 @@ mail = Mail(app)
 
 from flask_rq2 import RQ
 RQ_ASYNC = 'REDIS_URL' in app.config.keys()
-rq = RQ(async=RQ_ASYNC)
+RQ_TIMEOUT = app.config.get('RQ_TIMEOUT', 180)
+rq = RQ(async=RQ_ASYNC, default_timeout=RQ_TIMEOUT)
 rq.app_worker_path = 'app.worker_preload'
 rq.init_app(app)
 
