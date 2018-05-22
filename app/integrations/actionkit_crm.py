@@ -77,7 +77,7 @@ class ActionKitCRM(BaseCRM):
         return object_list
 
     def new_emails(self):
-        result = self.get_bgreport(self.ak_page_names['new_emails'], max_checks=5)
+        result = self.get_bgreport(self.ak_page_names['new_emails'], max_checks=10)
         emails_list = result.text.split()
         log.info('got {} new emails'.format(len(emails_list)))
         return emails_list
