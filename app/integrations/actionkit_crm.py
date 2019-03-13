@@ -88,15 +88,15 @@ class ActionKitCRM(BaseCRM):
         log.info('got {} old emails'.format(len(emails_list)))
         return emails_list
 
-    def set_user_status(self, stage, email, data, skip_subscribe=False):
+    def set_user_status(self, stage, email, data, opt_in=False):
         update = {
             'page': self.ak_page_names[stage],
             'email': email,
         }
-        if skip_subscribe:
+        if opt_in:
             update['opt_in'] = True
-            # if opt_in is true, users will only be subscribed to lists provided
-            # since we are not providing any lists, they will not be re-subscribed
+            # if opt_in is true, users will be subscribed to lists provided in POST
+            # if false or not provided, users will be subscribed to the List associated with the Page
             # https://act.credoaction.com/docs/manual/api/rest/actionprocessing.html#parameters
         for key,value in data.items():
             update['action_{}'.format(key)] = value

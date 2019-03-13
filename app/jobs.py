@@ -126,7 +126,7 @@ def save_to_crm(stage='flanker'):
     if app.config.get('DEBUG'):
         return True
 
-    crm_complete = crm_instance.set_user_status(stage, email, {'status': status}, skip_subscribe=(status == 'invalid'))
+    crm_complete = crm_instance.set_user_status(stage, email, {'status': status})
 
     if stage == 'flanker' and 'suggested_email' in validation_result:
         suggested_email = validation_result['suggested_email']
